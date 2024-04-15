@@ -1,6 +1,0 @@
-#ifndef LAMPORT_H
-#define LAMPORT_H
-
-//LAMPORT CLASS DECLARATION GOES HERE
-
-#endif
