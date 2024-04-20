@@ -11,9 +11,10 @@ class Connection {
 private:
     int socket_fd;
     struct sockaddr_in server_addr;
+    bool is_server;
     int port_number;
 public:
-    Connection();
+    Connection(bool serv, int port);
     ~Connection();
 
     bool createSocket();
@@ -22,6 +23,7 @@ public:
     bool acceptConnection();
     bool connectToServer(const std::string& server_ip);
     bool sendData(int socket, const std:string& data);
+    //TODO: Replace string by a struct jisko randi jaisa pass karenge
     std::string recieveData(int socket);
     void closeSocket(int socket);
 };

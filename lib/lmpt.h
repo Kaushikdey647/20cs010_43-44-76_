@@ -11,11 +11,12 @@ class Lamport {
 private:
     int process_id; // Unique ID for each process
     std::atomic<int> logical_clock; // Atomic variable for logical clock
-    Connection* connection; // Pointer to Connection object
+    Connection* sender;
+    Connection* reciever;
     std::mutex clock_mutex; // Mutex for protecting logical clock updates
 
 public:
-    Lamport(int id, int port);
+    Lamport(int id, int sport, int rport);
     ~Lamport();
 
     void senderThread();
