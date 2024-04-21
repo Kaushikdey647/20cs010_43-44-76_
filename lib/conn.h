@@ -12,10 +12,11 @@ class Connection {
 private:
     int socket_fd;
     struct sockaddr_in server_address;
+    bool is_server;
     int port_number;
 
 public:
-    Connection(int port);
+    Connection(bool serv, int port);
     ~Connection();
 
     bool createSocket();
