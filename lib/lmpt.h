@@ -58,6 +58,9 @@ public:
     // HANDLE RECIEVED DATA
     void handleData(SyncData data);
 
+    // SEND REQUEST SIGNAL
+    void request();
+
     // MAINTAIN THE REQUEST QUEUE, ISKO BHI THREAD PE CHADHAYENGE
     void handleQueue();
 

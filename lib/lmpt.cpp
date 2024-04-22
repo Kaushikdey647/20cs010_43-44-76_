@@ -170,7 +170,7 @@ void Lamport::handleQueue(){
 
                 // Check if all replies are received
                 if(replyMap.size() == nodeList.size() - 1){
-
+                    std::cout << "Entering Critial Section" << std::endl;
                     // Enter the critical section
                     std::this_thread::sleep_for(std::chrono::seconds(5));
 
@@ -179,6 +179,8 @@ void Lamport::handleQueue(){
 
                     // Clear the replyMap
                     replyMap.clear();
+
+                    std::cout << "Exiting Critial Section" << std::endl;
                 }
             }
         }
@@ -197,7 +199,7 @@ void Lamport::printConfig(){
     std::cout << "Node List: " << std::endl;
 
     for(auto it = nodeList.begin(); it != nodeList.end(); it++){
-        std::cout << "ID: " << it->first << " PORT: " << ntohs(it->second.sin_port) << std::endl;
+        std::cout << "ID: " << it->first << " PORT: " << ntohs(it->second.sin_port) << " HOST: " << inet_ntoa(it->second.sin_addr) << std::endl;
     }
 
     std::cout << "Request Queue: " << std::endl;
@@ -208,4 +210,20 @@ void Lamport::printConfig(){
         std::cout << "ID: " << temp.top().second << " TIMESTAMP: " << temp.top().first << std::endl;
         temp.pop();
     }
+
+    std::cout << std::endl;
+
+    std::cout << "Reply Map: " << std::endl;
+
+    //Print reply map
+    for(auto it = replyMap.begin(); it != replyMap.end(); it++){
+        std::cout << "ID: " << *it << std::endl;
+    }
+
+    std::cout << std::endl;
+}
+
+void Lamport::request(){
+    broadcast(REQUEST);
+    requestQueue.push({logicalClock, processId});
 }

@@ -6,24 +6,19 @@
 #include <sstream>
 
 void handleInput(Lamport* lamport){
-    std::cout << "Write REQUEST to REQUEST for some bitches\n>";
+    std::cout << "Write REQUEST to REQUEST for some bitches\n";
     std::string input;
     while(true){
+        std::cout << ">";
         std::cin >> input;
         if(input == "REQUEST"){
-            lamport->broadcast(Signal::REQUEST);
+            lamport->request();
         }
         if(input == "EXIT"){
             exit(0);
         }
-        if(input == "ADD"){
-            //addNode
-            int id;
-            std::string ip;
-            int port;
-            std::cout << "Enter the process_id and port of the node\n>";
-            std::cin >> id >> port;
-            lamport->addNode(id, "localhost", port);
+        if(input == "STATUS"){
+            lamport->printConfig();
         }
     }
 }
@@ -65,12 +60,9 @@ int main(int argc, char* argv[]) {
         std::istringstream iss(line);
         int id, port;
         if (iss >> port >> id) {
-            lamport->addNode(id, "localhost", port);
+            lamport->addNode(id, "127.0.0.1", port);
         }
     }
-
-    std::cout << "FINAL CONFIG" << std::endl;
-    lamport->printConfig();
 
     // Initialize the listener thread
     std::thread listenerThread(&Lamport::receive, lamport);
