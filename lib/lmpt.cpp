@@ -66,7 +66,9 @@ int Lamport::unicast(Signal sig, int sysId){
 
 int Lamport::broadcast(Signal sig){
     for(auto it = nodeList.begin(); it != nodeList.end(); it++){
-        unicast(sig, it->first);
+        if(it->first != processId){
+            unicast(sig, it->first);
+        }
     }
     return 0;
 }
@@ -180,5 +182,30 @@ void Lamport::handleQueue(){
                 }
             }
         }
+    }
+}
+
+void Lamport::printConfig(){
+
+
+    std::cout << "Process ID: " << processId << std::endl;
+
+    std::cout << "Listen Port: " << listenPort << std::endl;
+
+    std::cout << "Logical Clock: " << logicalClock << std::endl;
+
+    std::cout << "Node List: " << std::endl;
+
+    for(auto it = nodeList.begin(); it != nodeList.end(); it++){
+        std::cout << "ID: " << it->first << " PORT: " << ntohs(it->second.sin_port) << std::endl;
+    }
+
+    std::cout << "Request Queue: " << std::endl;
+
+    //print the request queue
+    std::priority_queue<std::pair<int, int>> temp = requestQueue;
+    while(!temp.empty()){
+        std::cout << "ID: " << temp.top().second << " TIMESTAMP: " << temp.top().first << std::endl;
+        temp.pop();
     }
 }
