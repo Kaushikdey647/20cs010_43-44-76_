@@ -48,10 +48,10 @@ public:
     void addNode(int id, std::string ip, int port);
 
     // FIND THE PORT AND SEND THE DATA
-    int unicast(SyncData data, int sysId);
+    int unicast(Signal sig, int sysId);
 
     // SEND DATA TO ALL NODES
-    int broadcast(SyncData data);
+    int broadcast(Signal sig);
 
     // RECIEVE DATA FROM THE PORT, ISKO THREAD PE CHADHAYENGE
     void receive();

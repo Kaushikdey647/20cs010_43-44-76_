@@ -14,7 +14,7 @@ void Lamport::addNode(int id, std::string ip, int port){
     nodeList[id] = node;
 }
 
-int Lamport::unicast(SyncData data, int sysId){
+int Lamport::unicast(Signal sig, int sysId){
     // Fetch sockAddr from nodeList
     struct sockaddr_in node = nodeList[sysId];
 
@@ -31,6 +31,23 @@ int Lamport::unicast(SyncData data, int sysId){
         return -1;
     }
 
+    SyncData data;
+
+    // Lock the clock
+    std::unique_lock<std::mutex> lock(clockMutex);
+
+    // Get the clock
+    data.timestamp = logicalClock;
+
+    // Set the senderId
+    data.senderId = processId;
+
+    // Set the message type
+    data.msgType = sig;
+
+    // Unlock the clock
+    lock.unlock();
+
     // Send the data
     if(send(sock, &data, sizeof(data), 0) < 0){
         perror("Send failed");
@@ -43,9 +60,9 @@ int Lamport::unicast(SyncData data, int sysId){
     return 0;
 }
 
-int Lamport::broadcast(SyncData data){
+int Lamport::broadcast(Signal sig){
     for(auto it = nodeList.begin(); it != nodeList.end(); it++){
-        unicast(data, it->first);
+        unicast(sig, it->first);
     }
     return 0;
 }
