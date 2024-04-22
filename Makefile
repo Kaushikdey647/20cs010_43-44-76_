@@ -1,27 +1,29 @@
-CC = g++
-CFLAGS = -Wall -g
-TARGET = main
-SRCDIR = .
-OBJDIR = obj
-BINDIR = bin
+# Compiler
+CC := g++
 
-SRCS = $(wildcard $(SRCDIR)/*.cpp)
-OBJS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
+# Compiler flags
+CFLAGS := -Wall -Wextra -pedantic -std=c++11
 
-$(BINDIR)/$(TARGET): $(OBJS) | $(BINDIR)
-	$(CC) $(CFLAGS) -o $@ $^
+# Source files directory
+SRC_DIR := lib
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
+# Source files1
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+# Object files
+OBJS := $(SRCS:.cpp=.o)
 
-$(BINDIR):
-	mkdir -p $(BINDIR)
+# Target executable
+TARGET := main
 
+# Rule to build the target executable
+$(TARGET): $(OBJS) main.cpp
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Rule to build object files
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean rule
 clean:
-	rm -rf $(OBJDIR)/* $(BINDIR)/*
-	rm -rf $(OBJDIR) $(BINDIR)
-
-.PHONY: clean
+	rm -f $(OBJS) $(TARGET)

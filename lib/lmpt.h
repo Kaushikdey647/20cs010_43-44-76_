@@ -8,16 +8,17 @@
 #include <map>
 #include <string>
 #include <queue>
+#include <set>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <iostream>
 
 enum Signal {
     REQUEST, //SIGNALS MEANT TO REQUEST THE CRITICAL SECTION
     REPLY, //SIGNALS MEANT TO REPLY TO A REQUEST
     RELEASE, //SIGNALS MEANT TO RELEASE THE CRITICAL SECTION
-    SYNC //SIGNALS MEANT TO SYNC THE CLOCKS
 };
 
 class SyncData {
@@ -34,10 +35,8 @@ private:
     int listenPort; // Port for listening to incoming messages
     std::mutex clockMutex; // Mutex for protecting logical clock updates
     std::map<int, struct sockaddr_in> nodeList; // Map for storing node information
-    std::queue<std::pair<int, int>> requestQueue; // Queue for storing requests
-    std::thread listener; // Thread for listening to incoming messages
-    std::thread queueHandler; // Thread for handling request queue
-
+    std::priority_queue<std::pair<int, int>> requestQueue; // Queue for storing requests
+    std::set<int> replyMap; // Map for storing reply status
 public:
     Lamport(int id, int lport);
     ~Lamport();
@@ -58,6 +57,9 @@ public:
 
     // HANDLE RECIEVED DATA
     void handleData(SyncData data);
+
+    // MAINTAIN THE REQUEST QUEUE, ISKO BHI THREAD PE CHADHAYENGE
+    void handleQueue();
 };
 
 #endif

@@ -6,6 +6,10 @@ Lamport::Lamport(int id, int lport){
     listenPort = lport;
 }
 
+Lamport::~Lamport(){
+
+}
+
 void Lamport::addNode(int id, std::string ip, int port){
     struct sockaddr_in node;
     node.sin_family = AF_INET;
@@ -123,20 +127,58 @@ void Lamport::handleData(SyncData data){
     // Unlock the clock
     lock.unlock();
 
-    // Handle the data
     switch(data.msgType){
         case REQUEST:
+            std::cout << "Request received from " << data.senderId << std::endl;
             // Add the request to the queue
             requestQueue.push({data.timestamp, data.senderId});
+
+            // If top of requestQueue is not this process, reply
+            if(requestQueue.top().second != processId){
+                unicast(REPLY, data.senderId);
+            }
+
             break;
+
         case REPLY:
-            // Do something
+            // Add reply to the replyMap
+            std::cout << "Reply received from " << data.senderId << std::endl;
+            replyMap.insert(data.senderId);
             break;
+
         case RELEASE:
             // Do something
+            std::cout << "Release received from " << data.senderId << std::endl;
+            if(data.senderId == requestQueue.top().second)
+                requestQueue.pop();
+            else{
+                perror("Invalid release");
+                exit(1);
+            }
             break;
-        case SYNC:
-            // Do something
-            break;
+    }
+}
+
+void Lamport::handleQueue(){
+    while(true){
+        if(!requestQueue.empty()){
+
+            // If the top request is from this process
+            if(requestQueue.top().second == processId){
+
+                // Check if all replies are received
+                if(replyMap.size() == nodeList.size() - 1){
+
+                    // Enter the critical section
+                    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+                    // Broadcast release signal
+                    broadcast(RELEASE);
+
+                    // Clear the replyMap
+                    replyMap.clear();
+                }
+            }
+        }
     }
 }
