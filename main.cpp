@@ -6,7 +6,7 @@
 #include <sstream>
 
 void handleInput(Lamport* lamport){
-    std::cout << "Write REQUEST to REQUEST for some bitches\n";
+    std::cout << "Available commands: REQUEST, EXIT, STATUS\n";
     std::string input;
     while(true){
         std::cout << ">";
@@ -15,7 +15,7 @@ void handleInput(Lamport* lamport){
             lamport->request();
         }
         if(input == "EXIT"){
-            exit(0);
+            return;
         }
         if(input == "STATUS"){
             lamport->printConfig();

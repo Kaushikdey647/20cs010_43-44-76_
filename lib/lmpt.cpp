@@ -190,11 +190,9 @@ void Lamport::handleQueue(){
 void Lamport::printConfig(){
 
 
-    std::cout << "Process ID: " << processId << std::endl;
-
-    std::cout << "Listen Port: " << listenPort << std::endl;
-
-    std::cout << "Logical Clock: " << logicalClock << std::endl;
+    std::cout << "ID: " << processId;
+    std::cout << " Port: " << listenPort;
+    std::cout << " Clock: " << logicalClock << std::endl;
 
     std::cout << "Node List: " << std::endl;
 

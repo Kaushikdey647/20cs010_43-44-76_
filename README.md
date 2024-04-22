@@ -36,15 +36,23 @@ This will compile the source files and generate the executable `main`.
 After building the project, you can run the executable with the following command:
 
 ```
-./main -p <PORT_NO> -i <SYSTEM_ID>
+./main -p <PORT_NO> -i <SYSTEM_ID> -f <CONFIG_FILE>
 ```
 
-Replace `<PORT_NO>` with the desired port number for the process to listen on, and `<SYSTEM_ID>` with a unique identifier for the process.
+Replace `<PORT_NO>` with the desired port number for the process to listen on, `<SYSTEM_ID>` with a unique identifier for the process and `<CONFIG_FILE>` with the path to the configuration file containing information about other nodes in the distributed system. It should look something like
 
+```
+8080 1
+9090 2
+
+```
+and so on
+
+The program will start listening for incoming messages on the specified port and will wait for user input.
 During execution, the program will prompt you to enter additional commands:
 
 - `REQUEST`: Send a request for accessing the critical section.
-- `ADD`: Add a new node to the distributed system.
+- `STATUS`: Add a new node to the distributed system.
 - `EXIT`: Terminate the program.
 
 ## Lamport Class
