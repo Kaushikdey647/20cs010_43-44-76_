@@ -2,6 +2,8 @@
 
 This project implements Lamport's Mutual Exclusion Algorithm, a distributed algorithm for achieving mutual exclusion in a distributed system. It ensures that only one process can access a shared resource (critical section) at any given time, preventing race conditions and ensuring data consistency.
 
+![IMG](/img/ssc_1.png)
+
 ## Project Structure
 
 ```

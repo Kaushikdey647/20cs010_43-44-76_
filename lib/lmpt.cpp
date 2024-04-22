@@ -131,7 +131,7 @@ void Lamport::handleData(SyncData data){
 
     switch(data.msgType){
         case REQUEST:
-            std::cout << "Request received from " << data.senderId << std::endl;
+            std::cout << logicalClock << ": Request received from " << data.senderId << std::endl;
             // Add the request to the queue
             requestQueue.push({data.timestamp, data.senderId});
 
@@ -144,13 +144,13 @@ void Lamport::handleData(SyncData data){
 
         case REPLY:
             // Add reply to the replyMap
-            std::cout << "Reply received from " << data.senderId << std::endl;
+            std::cout << logicalClock << ": Reply received from " << data.senderId << std::endl;
             replyMap.insert(data.senderId);
             break;
 
         case RELEASE:
             // Do something
-            std::cout << "Release received from " << data.senderId << std::endl;
+            std::cout << logicalClock << ": Release received from " << data.senderId << std::endl;
             if(data.senderId == requestQueue.top().second)
                 requestQueue.pop();
             else{
@@ -170,9 +170,15 @@ void Lamport::handleQueue(){
 
                 // Check if all replies are received
                 if(replyMap.size() == nodeList.size() - 1){
-                    std::cout << "Entering Critial Section" << std::endl;
+
+                    //increment clock
+                    std::unique_lock<std::mutex> lock(clockMutex);
+                    logicalClock++;
+                    lock.unlock();
+
+                    std::cout << logicalClock << ": Entering Critial Section" << std::endl;
                     // Enter the critical section
-                    std::this_thread::sleep_for(std::chrono::seconds(5));
+                    std::this_thread::sleep_for(std::chrono::seconds(10));
 
                     // Broadcast release signal
                     broadcast(RELEASE);
@@ -180,7 +186,10 @@ void Lamport::handleQueue(){
                     // Clear the replyMap
                     replyMap.clear();
 
-                    std::cout << "Exiting Critial Section" << std::endl;
+                    //pop from the pqueue
+                    requestQueue.pop();
+
+                    std::cout << logicalClock << ": Exiting Critial Section" << std::endl;
                 }
             }
         }
@@ -203,7 +212,7 @@ void Lamport::printConfig(){
     std::cout << "Request Queue: " << std::endl;
 
     //print the request queue
-    std::priority_queue<std::pair<int, int>> temp = requestQueue;
+    std::priority_queue<std::pair<int, int>,std::vector<std::pair<int,int>>,std::greater<std::pair<int,int>>> temp = requestQueue;
     while(!temp.empty()){
         std::cout << "ID: " << temp.top().second << " TIMESTAMP: " << temp.top().first << std::endl;
         temp.pop();
@@ -222,6 +231,12 @@ void Lamport::printConfig(){
 }
 
 void Lamport::request(){
+    // Increment clock
+
+    std::unique_lock<std::mutex> lock(clockMutex);
+    logicalClock++;
+    lock.unlock();
+
     broadcast(REQUEST);
     requestQueue.push({logicalClock, processId});
 }

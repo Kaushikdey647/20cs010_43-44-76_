@@ -35,7 +35,7 @@ private:
     int listenPort; // Port for listening to incoming messages
     std::mutex clockMutex; // Mutex for protecting logical clock updates
     std::map<int, struct sockaddr_in> nodeList; // Map for storing node information
-    std::priority_queue<std::pair<int, int>> requestQueue; // Queue for storing requests
+    std::priority_queue<std::pair<int, int>,std::vector<std::pair<int,int>>,std::greater<std::pair<int,int>>> requestQueue; // Queue for storing requests
     std::set<int> replyMap; // Map for storing reply status
 public:
     Lamport(int id, int lport);
