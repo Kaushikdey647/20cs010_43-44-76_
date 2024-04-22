@@ -1,5 +1,13 @@
 # Lamport's Mutual Exclusion Algorithm
 
+## Team Members
+
+- Kaushik Dey (20CS01043)
+- Akshat Anand (20CS01044)
+- Giriraj Singh (20CS01076)
+
+## Description
+
 This project implements Lamport's Mutual Exclusion Algorithm, a distributed algorithm for achieving mutual exclusion in a distributed system. It ensures that only one process can access a shared resource (critical section) at any given time, preventing race conditions and ensuring data consistency.
 
 ![IMG](/img/ssc_1.png)
@@ -81,12 +89,6 @@ The `Lamport` class is a C++ implementation of Lamport's distributed mutual excl
 - `int unicast(Signal sig, int sysId)`: Sends a signal to the node with the given system ID. The signal is sent via unicast.
 
 This class provides the basic functionalities needed to implement Lamport's distributed mutual exclusion algorithm in a distributed system.
-
-## Team Members
-
-- Kaushik Dey (20CS01043)
-- Akshat Anand (20CS01044)
-- Giriraj Singh (20CS01076)
 
 ## Algorithm Overview
 
