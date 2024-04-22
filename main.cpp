@@ -28,10 +28,6 @@ void handleInput(Lamport* lamport){
     }
 }
 
-void handleFile(std::string filename, Lamport* lamport){
-
-}
-
 int main(int argc, char* argv[]) {
     int port = 0;
     int sys_id = 0;
