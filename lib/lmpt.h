@@ -1,8 +1,8 @@
 #ifndef LAMPORT_H
 #define LAMPORT_H
 
-#include <thread>
 #include <mutex>
+#include <thread>
 #include <condition_variable>
 #include <atomic>
 #include <map>
@@ -41,10 +41,30 @@ public:
     Lamport(int id, int lport);
     ~Lamport();
 
-    // BASE FUNCTIONALITIES
+    // GETTERS AND SETTERS
 
     // ADD SYSTEM TO THE NODE LIST
     void addNode(int id, std::string ip, int port);
+
+    // GET THE SYSTEM BY ID
+    sockaddr_in getNode(int id);
+
+    // SET THE SYSTEM BY ID
+    void setNode(int id, std::string ip, int port);
+
+    // GET THE PROCESS ID
+    int getProcessId();
+
+    // SET THE PROCESS ID
+    void setProcessId(int id);
+
+    // GET SERVER PORT
+    int getServerPort();
+
+    // GET THE LOGICAL CLOCK
+    int getLogicalClock();
+
+    // FUNCTIONAL MODULES
 
     // FIND THE PORT AND SEND THE DATA
     int unicast(Signal sig, int sysId);

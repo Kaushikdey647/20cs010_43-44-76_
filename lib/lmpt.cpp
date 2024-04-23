@@ -18,6 +18,31 @@ void Lamport::addNode(int id, std::string ip, int port){
     nodeList[id] = node;
 }
 
+sockaddr_in Lamport::getNode(int id){
+    return nodeList[id];
+}
+
+void Lamport::setNode(int id, std::string ip, int port){
+    nodeList[id].sin_addr.s_addr = inet_addr(ip.c_str());
+    nodeList[id].sin_port = htons(port);
+}
+
+int Lamport::getProcessId(){
+    return processId;
+}
+
+void Lamport::setProcessId(int id){
+    processId = id;
+}
+
+int Lamport::getServerPort(){
+    return listenPort;
+}
+
+int Lamport::getLogicalClock(){
+    return logicalClock;
+}
+
 int Lamport::unicast(Signal sig, int sysId){
     // Fetch sockAddr from nodeList
     struct sockaddr_in node = nodeList[sysId];
